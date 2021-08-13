@@ -132,6 +132,8 @@ async function run(): Promise<void> {
 
     const { getTicketDetails } = getJIRAClient(JIRA_BASE_URL, JIRA_TOKEN);
     const details: JIRADetails = await getTicketDetails(issueKey);
+    console.log('Jira issue details -> ', details);
+
     if (details.key) {
       const podLabel = details?.project?.name || '';
       const hotfixLabel: string = getHotfixLabel(baseBranch);
@@ -155,6 +157,8 @@ async function run(): Promise<void> {
         core.setFailed('The found jira issue does is not in acceptable statuses');
         process.exit(1);
       }
+
+      console.log('Should update pr body? -> ', shouldUpdatePRDescription(prBody));
 
       if (shouldUpdatePRDescription(prBody)) {
         const prData: PullsUpdateParams = {

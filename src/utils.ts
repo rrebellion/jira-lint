@@ -230,7 +230,13 @@ export const shouldSkipBranchLint = (branch: string, additionalIgnorePattern?: s
 export const shouldUpdatePRDescription = (
   /** The PR description/body as a string. */
   body?: string
-): boolean => typeof body === 'string' && !MARKER_REGEX.test(body);
+): boolean => {
+  if (typeof body == 'string') {
+    return !MARKER_REGEX.test(body);
+  } else {
+    return true;
+  }
+};
 
 /**
  * Get links to labels & remove spacing so the table works.
@@ -247,7 +253,7 @@ export const getLabelsForDisplay = (labels: JIRADetails['labels']): string => {
 export const getPRDescription = (body = '', details: JIRADetails): string => {
   const displayKey = details.key.toUpperCase();
 
-  return `
+  let newBody = `
 <details open>
   <summary><a href="${details.url}" title="${displayKey}" target="_blank">${displayKey}</a></summary>
   <br />
@@ -284,7 +290,13 @@ export const getPRDescription = (body = '', details: JIRADetails): string => {
 
 ---
 
-${body}`;
+`;
+
+  if (typeof body == 'string') {
+    newBody = `${newBody} ${body}`;
+  }
+
+  return newBody;
 };
 
 /** Check if a PR is considered "huge". */
@@ -355,7 +367,7 @@ export const getInvalidIssueStatusComment = (
   /** Threshold of additions allowed. */
   allowedStatuses: string
 ): string =>
-  `<p>:broken_heart: The detected issue is not in one of the allowed statuses :broken_heart: </p>    
+  `<p>:broken_heart: The detected issue is not in one of the allowed statuses :broken_heart: </p>
    <table>
      <tr>
         <th>Detected Status</th>
