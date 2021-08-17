@@ -1,3 +1,7 @@
+This is fork this some additions:
+
+- Fix null body pull request not updated with jira details bug
+
 # jira-lint 🧹
 
 > A light-weight lint workflow when using GitHub along with [JIRA][jira] for project management.
