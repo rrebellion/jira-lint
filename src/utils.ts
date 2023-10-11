@@ -47,9 +47,7 @@ export const getJIRAClient = (baseURL: string, token: string): JIRAClient => {
 
   const getIssue = async (id: string): Promise<JIRA.Issue> => {
     try {
-      const response = await client.get<JIRA.Issue>(
-        `/issue/${id}?fields=project,summary,issuetype,labels,status,customfield_10016`
-      );
+      const response = await client.get<JIRA.Issue>(`/issue/${id}?fields=*all`);
       return response.data;
     } catch (e) {
       throw e;
