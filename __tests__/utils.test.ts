@@ -82,6 +82,18 @@ describe('getHotFixLabel()', () => {
 });
 
 describe('getJIRAIssueKeys()', () => {
+  it('does not extract partial issue numbers from branch descriptions', () => {
+    expect(getJIRAIssueKeys('features/DEV-6070/add-fee-for-1c/rw')).toEqual(['DEV-6070']);
+    expect(getJIRAIssueKeys('features/dev-6070/add-fee-for-12C/rw')).toEqual(['DEV-6070']);
+    expect(getJIRAIssueKeys('feature/add-fee-for-1c')).toEqual([]);
+    expect(getJIRAIssueKeys('DEV-6070suffix')).toEqual([]);
+  });
+
+  it('keeps complete issue keys separated by branch delimiters', () => {
+    expect(getJIRAIssueKeys('features/DEV-6070/add-fee-FOR-1/rw')).toEqual(['DEV-6070', 'FOR-1']);
+    expect(getJIRAIssueKeys('DEV-6070_description/ITSM-42')).toEqual(['DEV-6070', 'ITSM-42']);
+  });
+
   it('gets multiple keys from a string', () => {
     expect(
       getJIRAIssueKeys(
